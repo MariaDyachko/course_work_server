@@ -53,7 +53,7 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
 
         int port = 8080;
         try {
-        String fileName = "C://dir/Settings/Settings.txt";
+        String fileName = "Settings.txt";
         File file = new File(fileName);
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
@@ -117,7 +117,9 @@ public class ClientWindow extends JFrame implements ActionListener, TCPConnectio
     }
 
     public synchronized void log(String value){
-        String filePath = "C://dir/History/History.txt";
+        //String filePath = "C://dir/History/History.txt";
+        String filePath = "History.txt";
+
         String text = value + "\n";
 
         try {

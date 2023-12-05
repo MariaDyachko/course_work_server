@@ -1,0 +1,2 @@
+Client connected: TCPConnection{/127.0.0.1, 50638}
+01:06:37 no name: го

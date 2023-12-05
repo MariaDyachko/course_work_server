@@ -1,11 +1,8 @@
 package org.example.server;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.io.FileOutputStream;
 
 import org.example.network.*;
 
@@ -14,20 +11,29 @@ public class ChatServer implements TCPConnectionListener{
     public static final Integer LOCALHOST_PORT = 8080;
 
     public static void main(String[] args) {
-        createSettingsFile();
         new ChatServer();
     }
-
-    //public ArrayList<TCPConnection> getConnections() {
-    //    return connections;
-    //}
 
     //private final ArrayList<TCPConnection> connections = new ArrayList<>();
     public static final ArrayList<TCPConnection> connections = new ArrayList<>();
 
     public ChatServer() {
+
+        int port = 8080;
+        try {
+            String fileName = "Settings.txt";
+            File file = new File(fileName);
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            port = Integer.parseInt(br.readLine());
+
+            br.close();
+        } catch (IOException e) {
+            System.out.println("Connection exception: " + e);
+        }
+
         System.out.println("Server running...");
-        try(ServerSocket serverSocket = new ServerSocket(LOCALHOST_PORT);) {
+        try(ServerSocket serverSocket = new ServerSocket(port)) {
             while(true) {
                 try{
                     new TCPConnection(this, serverSocket.accept()); //core
@@ -68,41 +74,5 @@ public class ChatServer implements TCPConnectionListener{
         for (int i = 0; i < connections.size(); i++) {
             connections.get(i).sendString(value);
         }
-    }
-
-    private static void createSettingsFile(){
-        File dir = new File("C://dir");
-        dir.mkdir();
-        File dirSettings = new File("C://dir/Settings");
-        dirSettings.mkdir();
-        System.out.println("roots created");
-
-        File settings = new File(dirSettings, "Settings.txt");
-        try {
-            settings.createNewFile();
-        } catch (IOException e) {
-            System.out.println("файл с настройками не создан");
-        }
-
-        try (FileOutputStream fos = new FileOutputStream(settings)){
-            String success = "" + LOCALHOST_PORT;
-            fos.write(success.getBytes());
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        File dirHistory = new File("C://dir/History");
-        dirHistory.mkdir();
-
-        File history = new File(dirHistory, "History.txt");
-        try {
-            history.createNewFile();
-        } catch (IOException e) {
-            System.out.println("файл с настройками не создан");
-        }
-        System.out.println("files created");
-
     }
 }
